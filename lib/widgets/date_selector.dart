@@ -44,10 +44,23 @@ class DateSelector extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    if (todos.isNotEmpty)
+                      Container(
+                        margin: const EdgeInsets.only(top: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF4A90E2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '${todos.length}',
+                          style: const TextStyle(color: Colors.white, fontSize: 10),
+                        ),
+                      ),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.amber[200] : Colors.transparent,
+                        color: isSelected ? Colors.white : Colors.transparent,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -60,19 +73,6 @@ class DateSelector extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(_weekdayKor(date.weekday), style: const TextStyle(fontSize: 12)),
-                    if (todos.isNotEmpty)
-                      Container(
-                        margin: const EdgeInsets.only(top: 2),
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          '${todos.length}',
-                          style: const TextStyle(color: Colors.white, fontSize: 10),
-                        ),
-                      ),
                   ],
                 ),
               );
