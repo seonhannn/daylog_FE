@@ -12,8 +12,8 @@ class CustomCheckbox extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.size = 20,
-    this.activeColor = const Color(0xFF4A90E2),
-    this.borderColor = const Color(0xFFB0B3B8),
+    this.activeColor = const Color(0xff7E99A3),
+    this.borderColor = Colors.white,
   });
 
   @override

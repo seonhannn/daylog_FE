@@ -18,69 +18,80 @@ class DateSelector extends ConsumerWidget {
     final memoList = ref.watch(memoListProvider);
     final weekDates = getThisWeekDates(selectedDate);
 
-    return SizedBox(
-      height: 80,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:
-            weekDates.map((date) {
-              final todos =
-                  memoList
-                      .where(
-                        (m) =>
-                            m.type == MemoType.todo &&
-                            m.memoDate.year == date.year &&
-                            m.memoDate.month == date.month &&
-                            m.memoDate.day == date.day &&
-                            (m.isDone != true),
-                      )
-                      .toList();
-              final isSelected =
-                  date.year == selectedDate.year &&
-                  date.month == selectedDate.month &&
-                  date.day == selectedDate.day;
-              return GestureDetector(
-                onTap: () => ref.read(selectedDateProvider.notifier).state = date,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (todos.isNotEmpty)
-                      Container(
-                        height: 18,
-                        margin: const EdgeInsets.only(top: 2),
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF4A90E2),
-                          borderRadius: BorderRadius.circular(10),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            '${selectedDate.year.toString().padLeft(4, '0')}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children:
+                weekDates.map((date) {
+                  final todos =
+                      memoList
+                          .where(
+                            (m) =>
+                                m.type == MemoType.todo &&
+                                m.memoDate.year == date.year &&
+                                m.memoDate.month == date.month &&
+                                m.memoDate.day == date.day &&
+                                (m.isDone != true),
+                          )
+                          .toList();
+                  final isSelected =
+                      date.year == selectedDate.year &&
+                      date.month == selectedDate.month &&
+                      date.day == selectedDate.day;
+                  return GestureDetector(
+                    onTap: () => ref.read(selectedDateProvider.notifier).state = date,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (todos.isNotEmpty)
+                          Container(
+                            margin: const EdgeInsets.only(top: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Color(0xff7E99A3),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '${todos.length}',
+                              style: const TextStyle(color: Colors.white, fontSize: 10),
+                            ),
+                          )
+                        else
+                          const SizedBox(height: 20), // 숫자 뱃지와 동일한 높이로 맞춤
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isSelected ? Colors.white : Colors.transparent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '${date.day}',
+                            style: TextStyle(
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          '${todos.length}',
-                          style: const TextStyle(color: Colors.white, fontSize: 10),
-                        ),
-                      )
-                    else
-                      const SizedBox(height: 20), // 숫자 뱃지와 동일한 높이로 맞춤
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.white : Colors.transparent,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        '${date.day}',
-                        style: TextStyle(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          fontSize: 18,
-                        ),
-                      ),
+                        const SizedBox(height: 4),
+                        Text(_weekdayKor(date.weekday), style: const TextStyle(fontSize: 12)),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(_weekdayKor(date.weekday), style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
-              );
-            }).toList(),
-      ),
+                  );
+                }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }

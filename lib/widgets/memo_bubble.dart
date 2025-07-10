@@ -23,7 +23,7 @@ class MemoBubble extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
+              color: Color(0xffA5BFCC).withOpacity(0.5),
               borderRadius: BorderRadius.circular(8),
             ),
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),

@@ -13,7 +13,11 @@ class DaylogApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daylog',
-      theme: ThemeData(fontFamily: 'Pretendard', useMaterial3: true),
+      theme: ThemeData(
+        fontFamily: 'Pretendard',
+        primaryColor: Color(0xffA5BFCC),
+        useMaterial3: true,
+      ),
       home: const HomeScreen(),
     );
   }
