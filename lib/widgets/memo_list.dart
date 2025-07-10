@@ -27,7 +27,7 @@ class MemoList extends ConsumerWidget {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 80, top: 8),
+      padding: const EdgeInsets.only(bottom: 80, top: 12),
       itemCount: filtered.length,
       itemBuilder: (context, idx) {
         final memo = filtered[idx];

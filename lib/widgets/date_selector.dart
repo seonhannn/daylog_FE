@@ -46,6 +46,7 @@ class DateSelector extends ConsumerWidget {
                   children: [
                     if (todos.isNotEmpty)
                       Container(
+                        height: 18,
                         margin: const EdgeInsets.only(top: 2),
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
@@ -56,7 +57,9 @@ class DateSelector extends ConsumerWidget {
                           '${todos.length}',
                           style: const TextStyle(color: Colors.white, fontSize: 10),
                         ),
-                      ),
+                      )
+                    else
+                      const SizedBox(height: 20), // 숫자 뱃지와 동일한 높이로 맞춤
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
