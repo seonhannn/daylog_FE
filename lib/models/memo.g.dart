@@ -29,8 +29,4 @@ Map<String, dynamic> _$$MemoImplToJson(_$MemoImpl instance) =>
       'isDone': instance.isDone,
     };
 
-const _$MemoTypeEnumMap = {
-  MemoType.memo: 'memo',
-  MemoType.notice: 'notice',
-  MemoType.todo: 'todo',
-};
+const _$MemoTypeEnumMap = {MemoType.memo: 'memo', MemoType.todo: 'todo'};

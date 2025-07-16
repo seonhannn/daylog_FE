@@ -14,14 +14,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            children: const [
-              SizedBox(height: 8),
-              DateSelector(),
-              Expanded(child: MemoList()),
-              MemoInput(),
-            ],
-          ),
+          child: Column(children: const [DateSelector(), Expanded(child: MemoList()), MemoInput()]),
         ),
       ),
     );

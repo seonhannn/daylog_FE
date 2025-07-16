@@ -17,7 +17,7 @@ final memoListProvider = StateProvider<List<Memo>>((ref) {
       id: '2',
       userId: 'user1',
       content: '중요 공지: 내일 점검',
-      type: MemoType.notice,
+      type: MemoType.memo,
       memoDate: DateTime.now(),
       createdAt: DateTime.now(),
     ),

@@ -19,4 +19,4 @@ class Memo with _$Memo {
   factory Memo.fromJson(Map<String, dynamic> json) => _$MemoFromJson(json);
 }
 
-enum MemoType { memo, notice, todo }
+enum MemoType { memo, todo }
