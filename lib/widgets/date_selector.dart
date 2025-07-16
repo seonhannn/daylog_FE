@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/date_provider.dart';
 import '../providers/memo_provider.dart';
 import '../models/memo.dart';
 
 class DateSelector extends ConsumerStatefulWidget {
-  const DateSelector({super.key});
+  final ScrollController? memoScrollController;
+  const DateSelector({super.key, this.memoScrollController});
 
   @override
   ConsumerState<DateSelector> createState() => _DateSelectorState();
@@ -19,11 +20,11 @@ class _DateSelectorState extends ConsumerState<DateSelector> {
     super.initState();
     _scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _jumpToTodayWeek();
+      _jumpToTodayCenter();
     });
   }
 
-  void _jumpToTodayWeek() {
+  void _jumpToTodayCenter() {
     final selectedDate = ref.read(selectedDateProvider);
     final allDatesOfYear = getAllDatesOfYear(selectedDate.year);
     final today = DateTime.now();
@@ -32,8 +33,11 @@ class _DateSelectorState extends ConsumerState<DateSelector> {
     );
     if (todayIndex != -1) {
       final screenWidth = MediaQuery.of(context).size.width;
-      final offset = (todayIndex - today.weekday % 7) * (screenWidth / 7);
-      _scrollController.jumpTo(offset < 0 ? 0 : offset);
+      final cellWidth = screenWidth / 7;
+      final offset = (todayIndex + 0.5) * cellWidth - screenWidth / 2;
+      if (mounted && _scrollController.hasClients) {
+        _scrollController.jumpTo(offset < 0 ? 0 : offset);
+      }
     }
   }
 
@@ -61,28 +65,40 @@ class _DateSelectorState extends ConsumerState<DateSelector> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
+        // 선택한 날짜
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
                 '${selectedDate.year.toString().padLeft(4, '0')}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.day.toString().padLeft(2, '0')}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: CupertinoColors.label,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () {
-                ref.read(selectedDateProvider.notifier).state = DateTime.now();
-                _jumpToTodayWeek(); // 오늘 날짜로 스크롤 이동
-              },
-              icon: const Icon(Icons.today),
-            ),
-          ],
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                minSize: 32,
+                onPressed: () {
+                  ref.read(selectedDateProvider.notifier).state = DateTime.now();
+                  _jumpToTodayCenter();
+                },
+                child: const Icon(
+                  CupertinoIcons.calendar_today,
+                  size: 22,
+                  color: CupertinoColors.activeBlue,
+                ),
+              ),
+            ],
+          ),
         ),
-        SizedBox(
+        Container(
           height: 80,
-          width: screenWidth, // 한 화면에 7일만 보이게
+          width: screenWidth,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ListView(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
@@ -104,42 +120,80 @@ class _DateSelectorState extends ConsumerState<DateSelector> {
                       date.month == selectedDate.month &&
                       date.day == selectedDate.day;
                   return SizedBox(
-                    width: screenWidth / 7, // 각 날짜의 width를 1/7로 고정
+                    width: screenWidth / 7,
                     child: GestureDetector(
                       onTap: () => ref.read(selectedDateProvider.notifier).state = date,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          if (todos.isNotEmpty)
-                            Container(
-                              margin: const EdgeInsets.only(top: 2),
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Color(0xff7E99A3),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                '${todos.length}',
-                                style: const TextStyle(color: Colors.white, fontSize: 10),
-                              ),
-                            )
-                          else
-                            const SizedBox(height: 20), // 숫자 뱃지와 동일한 높이로 맞춤
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isSelected ? Colors.white : Colors.transparent,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${date.day}',
-                              style: TextStyle(
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                fontSize: 18,
-                              ),
+                          SizedBox(
+                            height: 48,
+                            child: Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                // 날짜 동그라미 (항상 아래쪽)
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          isSelected
+                                              ? CupertinoColors.white
+                                              : CupertinoColors.transparent,
+                                      shape: BoxShape.circle,
+                                      border:
+                                          isSelected
+                                              ? Border.all(
+                                                color: CupertinoColors.activeBlue,
+                                                width: 2,
+                                              )
+                                              : null,
+                                    ),
+                                    child: Text(
+                                      '${date.day}',
+                                      style: TextStyle(
+                                        fontWeight:
+                                            isSelected ? FontWeight.bold : FontWeight.normal,
+                                        fontSize: 18,
+                                        color:
+                                            isSelected
+                                                ? CupertinoColors.activeBlue
+                                                : CupertinoColors.label,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // 할일 뱃지 (있을 때만)
+                                if (todos.isNotEmpty)
+                                  Positioned(
+                                    top: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.activeBlue,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        '${todos.length}',
+                                        style: const TextStyle(
+                                          color: CupertinoColors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                          Text(_weekdayKor(date.weekday), style: const TextStyle(fontSize: 12)),
+                          const SizedBox(height: 2), // 날짜 동그라미와 요일 간격
+                          Text(
+                            _weekdayKor(date.weekday),
+                            style: const TextStyle(fontSize: 12, color: CupertinoColors.systemGrey),
+                          ),
                         ],
                       ),
                     ),

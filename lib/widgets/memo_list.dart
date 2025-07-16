@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/date_provider.dart';
 import '../providers/memo_provider.dart';
@@ -6,7 +6,9 @@ import '../models/memo.dart';
 import 'memo_bubble.dart';
 
 class MemoList extends ConsumerWidget {
-  const MemoList({super.key});
+  final ScrollController? scrollController;
+  final double topPadding;
+  const MemoList({super.key, this.scrollController, this.topPadding = 0});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,14 +24,25 @@ class MemoList extends ConsumerWidget {
             )
             .toList();
 
-    if (filtered.isEmpty) {
-      return const Center(child: Text('메모가 없습니다.'));
-    }
-
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 80, top: 12),
-      itemCount: filtered.length,
+      controller: scrollController,
+      padding: EdgeInsets.only(bottom: 80, top: topPadding + 12, left: 0, right: 0),
+      itemCount: filtered.isEmpty ? 1 : filtered.length,
       itemBuilder: (context, idx) {
+        if (filtered.isEmpty) {
+          return Container(
+            alignment: Alignment.center,
+            height: 120,
+            child: const Text(
+              '메모가 없습니다.',
+              style: TextStyle(
+                color: CupertinoColors.systemGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          );
+        }
         final memo = filtered[idx];
         return MemoBubble(
           memo: memo,

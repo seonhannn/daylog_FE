@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:frontend/widgets/custom_checkbox.dart';
 import '../models/memo.dart';
 
@@ -19,14 +19,21 @@ class MemoBubble extends StatelessWidget {
         children: [
           Text(
             _formatTime(memo.createdAt),
-            style: const TextStyle(fontSize: 10, color: Colors.grey),
+            style: const TextStyle(fontSize: 10, color: CupertinoColors.systemGrey),
           ),
           Container(
             decoration: BoxDecoration(
-              color: Color(0xffA5BFCC).withOpacity(0.5),
-              borderRadius: BorderRadius.circular(8),
+              color: CupertinoColors.systemGrey5,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: CupertinoColors.systemGrey.withOpacity(0.15),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
             margin: const EdgeInsets.only(left: 8),
             child:
                 memo.type == MemoType.todo
@@ -37,12 +44,17 @@ class MemoBubble extends StatelessWidget {
                         Text(
                           memo.content,
                           style: TextStyle(
+                            fontSize: 15,
+                            color: CupertinoColors.label,
                             decoration: (memo.isDone ?? false) ? TextDecoration.lineThrough : null,
                           ),
                         ),
                       ],
                     )
-                    : Text(memo.content),
+                    : Text(
+                      memo.content,
+                      style: const TextStyle(fontSize: 15, color: CupertinoColors.label),
+                    ),
           ),
         ],
       ),

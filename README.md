@@ -1,16 +1,79 @@
-# frontend
+# Daylog
 
-A new Flutter project.
+Flutter & Spring Boot 기반의 심플하고 세련된 메모/할일/공지 관리 앱 (iOS 스타일)
 
-## Getting Started
+## 주요 기능
 
-This project is a starting point for a Flutter application.
+- **iOS 스타일 UI**
+  - 전체 앱이 Cupertino 위젯 기반으로, 밝고 부드러운 iOS 감성
+  - 날짜 선택 바, 입력창, 리스트, 버튼 등 모두 iOS 느낌으로 구현
 
-A few resources to get you started if this is your first Flutter project:
+- **날짜 선택 바(week bar)**
+  - 올해 1월 1일부터 12월 31일까지 모든 날짜를 가로로 스크롤하여 선택 가능
+  - 한 화면에 7일(일주일)만 보이고, 나머지는 좌우 스크롤로 탐색
+  - 첫 진입 시 오늘 날짜가 중앙에 오도록 자동 스크롤
+  - 날짜 선택 바와 메모 리스트가 겹치는 부분만 오버레이로 자연스럽게 불투명하게 처리
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **메모 입력**
+  - 텍스트 필드 위에 메모 타입(메모, 할일)을 동그라미(라디오) 버튼으로 선택
+  - 타입은 한 번에 하나만 선택 가능
+  - 메모 입력 후 전송(화살표) 버튼 클릭 시 해당 날짜에 메모 추가
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **메모 리스트**
+  - 날짜별로 메모/할일을 구분해서 표시
+  - 할일은 체크박스로 완료 처리 가능
+  - 스크롤 시 날짜 선택 바와 자연스럽게 겹치며, UX가 부드럽게 유지됨
+  - 메모가 없을 때도 스크롤바/레이아웃이 깨지지 않음
+
+- **상태 관리**
+  - Riverpod 사용
+
+---
+
+## 프로젝트 구조
+
+```
+daylog/
+  backend/      # Spring Boot API 서버
+  frontend/     # Flutter 앱
+    lib/
+      widgets/
+        date_selector.dart   # 날짜 선택 가로 스크롤 UI (iOS 스타일, 오버레이 포함)
+        memo_input.dart      # 메모 입력 및 타입 선택 UI
+        memo_list.dart       # 메모 리스트 UI
+      providers/             # 상태 관리
+      models/                # 데이터 모델
+      screens/               # 주요 화면
+```
+
+---
+
+## 실행 방법
+
+### 백엔드(Spring Boot)
+```bash
+cd backend
+./gradlew bootRun
+```
+
+### 프론트엔드(Flutter)
+```bash
+cd frontend
+flutter pub get
+flutter run
+```
+
+---
+
+## iOS 감성 주요 포인트
+
+- **날짜 선택 바 오버레이**: week bar와 겹치는 부분만 자연스럽게 불투명하게 처리
+- **전체적인 밝은 배경, 라운드, 얇은 폰트, 여백**
+- **모든 스크롤/입력/상호작용이 iOS스럽게 부드럽게 동작**
+
+---
+
+## 기타
+
+- 추가 기능(공지, 이미지 첨부 등)은 주석/구조로 준비되어 있음
+- 디자인 및 기능 개선은 언제든 환영!

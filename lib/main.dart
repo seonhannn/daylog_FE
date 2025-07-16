@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home_screen.dart';
 
@@ -11,12 +11,11 @@ class DaylogApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CupertinoApp(
       title: 'Daylog',
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
+      theme: const CupertinoThemeData(
         primaryColor: Color(0xffA5BFCC),
-        useMaterial3: true,
+        scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
       ),
       home: const HomeScreen(),
     );

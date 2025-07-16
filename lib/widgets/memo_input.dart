@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/memo.dart';
 import '../providers/date_provider.dart';
@@ -26,8 +26,11 @@ class _MemoInputState extends ConsumerState<MemoInput> {
             height: 12,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: selected ? const Color(0xff7E99A3) : Colors.transparent,
-              border: Border.all(color: selected ? const Color(0xff7E99A3) : Colors.grey, width: 1),
+              color: selected ? CupertinoColors.activeBlue : CupertinoColors.transparent,
+              border: Border.all(
+                color: selected ? CupertinoColors.activeBlue : CupertinoColors.systemGrey,
+                width: 1,
+              ),
             ),
           ),
           const SizedBox(width: 4),
@@ -42,7 +45,7 @@ class _MemoInputState extends ConsumerState<MemoInput> {
     final selectedDate = ref.watch(selectedDateProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      color: Colors.transparent,
+      color: CupertinoColors.systemGroupedBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,8 +53,6 @@ class _MemoInputState extends ConsumerState<MemoInput> {
             children: [
               _circleRadio(MemoType.memo, '메모'),
               const SizedBox(width: 12),
-              // _circleRadio(MemoType.notice, '공지'),
-              // const SizedBox(width: 12),
               _circleRadio(MemoType.todo, '할일'),
             ],
           ),
@@ -59,19 +60,30 @@ class _MemoInputState extends ConsumerState<MemoInput> {
           Row(
             children: [
               Expanded(
-                child: TextField(
+                child: CupertinoTextField(
                   controller: _controller,
-                  decoration: const InputDecoration(
-                    hintText: '메모를 입력하세요.',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  placeholder: '메모를 입력하세요.',
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: CupertinoColors.systemGrey4, width: 1),
                   ),
+                  style: const TextStyle(fontSize: 15),
                 ),
               ),
               const SizedBox(width: 8),
-              GestureDetector(
-                onTap: () {
+              CupertinoButton(
+                padding: const EdgeInsets.all(0),
+                minSize: 36,
+                color: CupertinoColors.activeBlue,
+                borderRadius: BorderRadius.circular(20),
+                child: const Icon(
+                  CupertinoIcons.arrow_up_circle_fill,
+                  color: CupertinoColors.white,
+                  size: 22,
+                ),
+                onPressed: () {
                   final text = _controller.text.trim();
                   if (text.isEmpty) return;
                   final newMemo = Memo(
@@ -87,11 +99,6 @@ class _MemoInputState extends ConsumerState<MemoInput> {
                   _controller.clear();
                   setState(() => _selectedType = MemoType.memo);
                 },
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                  child: const Icon(Icons.send, size: 18),
-                ),
               ),
             ],
           ),
